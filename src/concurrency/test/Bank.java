@@ -20,15 +20,15 @@ public class Bank {
         a2.add(amount);
     }
 
-    void transfer(final Ref<Integer> a1, final Ref<Integer> a2, final int value) {
+    void transferSTM(final Account a1, final Account a2, final int value) {
         STM.transaction(new TransactionBlock() {
             @Override
             public void run() {
                 Transaction tx = this.getTx();
-                int old1 = a1.getValue(tx);
-                a1.setValue(old1 - value, tx);
-                int old2 = a2.getValue(tx);
-                a2.setValue(old2 + value, tx);
+                long old1 = a1.getRef().getValue(tx);
+                a1.getRef().setValue(old1 - value, tx);
+                long old2 = a2.getRef().getValue(tx);
+                a2.getRef().setValue(old2 + value, tx);
             }
         });
     }
@@ -51,7 +51,7 @@ public class Bank {
 
     public long sum() {
         long sum = 0;
-        for (Account a : accounts) sum += a.getMoney();
+        for (Account a : accounts) sum += a.getRef().getValue(GlobalContext.get());
         return sum;
     }
 

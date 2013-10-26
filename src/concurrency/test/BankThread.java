@@ -12,7 +12,7 @@ public class BankThread implements Runnable {
     @Override
     public void run() {
         for (int i = 0; i < num; i++) {
-            bank.transfer(bank.getRandomAccount(),
+            bank.transferSTM(bank.getRandomAccount(),
                           bank.getRandomAccount(),
                           bank.getRandomValue());
         }
