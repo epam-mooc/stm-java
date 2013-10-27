@@ -4,12 +4,10 @@ package concurrency.stm;
  * @author mishadoff
  */
 public final class Ref<T> {
-    T value;
-    long revision = 0;
+    RefTuple<T, Long> content;
 
     public Ref(T value) {
-        this.value = value;
-        GlobalContext.get().register(this, value);
+        content = RefTuple.get(value, 0);
     }
 
     public T getValue(Context ctx) {

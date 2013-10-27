@@ -3,6 +3,7 @@ package concurrency.stm;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -18,11 +19,17 @@ public final class Transaction extends Context{
 
     Transaction() {
         revision = transactionNum.incrementAndGet();
-        GlobalContext.get().fillSnapshot(inTxMap, version);
     }
 
     @Override
     <T> T get(Ref<T> ref) {
+        if (!inTxMap.containsKey(ref)) {
+            RefTuple<T, Long> tuple = ref.content;
+            inTxMap.put(ref, tuple.value);
+            if (!version.containsKey(ref)) {
+                version.put(ref, tuple.revision);
+            }
+        }
         return (T)inTxMap.get(ref);
     }
 
@@ -30,7 +37,7 @@ public final class Transaction extends Context{
         inTxMap.put(ref, value);
         toUpdate.add(ref);
         if (!version.containsKey(ref)) {
-            version.put(ref, ref.revision);
+            version.put(ref, ref.content.revision);
         }
     }
 
@@ -39,7 +46,7 @@ public final class Transaction extends Context{
             // validation
             boolean isValid = true;
             for (Ref ref : inTxMap.keySet()) {
-                if (ref.revision != version.get(ref)) {
+                if (ref.content.revision != version.get(ref)) {
                     isValid = false;
                     break;
                 }
@@ -48,8 +55,7 @@ public final class Transaction extends Context{
             // writes
             if (isValid) {
                 for (Ref ref : toUpdate) {
-                    ref.value = inTxMap.get(ref);
-                    ref.revision = revision;
+                    ref.content = RefTuple.get(inTxMap.get(ref), revision);
                 }
             }
             return isValid;

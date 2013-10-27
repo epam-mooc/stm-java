@@ -15,7 +15,7 @@ public class Bank {
         randomFill();
     }
 
-    void transfer(Account a1, Account a2, int amount) {
+    synchronized void transfer(Account a1, Account a2, int amount) {
         a1.add(-amount);
         a2.add(amount);
     }
@@ -34,10 +34,10 @@ public class Bank {
     }
 
     private void randomFill() {
-        int NUM = 10;
+        int NUM = 100;
         accounts = new Account[NUM];
         for (int i = 0; i < NUM; i++) {
-            accounts[i] = new Account(1000000);
+            accounts[i] = new Account(10000);
         }
     }
 
@@ -50,6 +50,12 @@ public class Bank {
     }
 
     public long sum() {
+        long sum = 0;
+        for (Account a : accounts) sum += a.getMoney();
+        return sum;
+    }
+
+    public long sumSTM() {
         long sum = 0;
         for (Account a : accounts) sum += a.getRef().getValue(GlobalContext.get());
         return sum;

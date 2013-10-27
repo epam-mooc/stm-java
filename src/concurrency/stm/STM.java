@@ -6,8 +6,7 @@ package concurrency.stm;
 public final class STM {
     private STM() {}
 
-    public static Object snapshotLock = new Object();
-    public static Object commitLock = new Object();
+    public static final Object commitLock = new Object();
 
     public static void transaction(TransactionBlock block) {
         boolean committed = false;
