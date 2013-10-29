@@ -8,6 +8,8 @@ public class Runner {
             new STMStrategy()
         };
 
+        //Thread.sleep(1000);
+
         for (TransferStrategy ts : tss) {
             Bank bank = new Bank();
             System.out.println(ts.getClass().getSimpleName());
