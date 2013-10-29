@@ -5,7 +5,13 @@
 1. fork this repository 
 2. clone your fork
 3. switch to branch 0.1
-   `git checkout tags/0.1`
+
+`git checkout tags/0.1`
+
+STM related functionality located under `concurrency.stm` package.
+`concurrency.test` is primarily for testing purposes.
+
+You can use slides from the [Presentation](http://www.slideshare.net/mishadoff/implementing-stm-in-java) as a source.
 
 ## Tasks
 
@@ -67,3 +73,7 @@ Hint: `STM.commitLock` can be improved, but not limited to.
 ### 10. Implementation from scratch [HARD]
 
 Implement any STM algorithm.
+
+</hr>
+
+Inspired by [STM in Scala](http://www.codecommit.com/blog/scala/software-transactional-memory-in-scala)
