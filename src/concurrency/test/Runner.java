@@ -2,12 +2,21 @@ package concurrency.test;
 
 public class Runner {
     public static void main(String[] args) throws Exception{
-        Bank bank = new Bank();
-        System.out.println("Bank sum before: " + bank.sumSTM());
-        long before = System.currentTimeMillis();
-        bank.simulate(10, 100000);
-        long after = System.currentTimeMillis();
-        System.out.println("Bank sum after: " + bank.sumSTM());
-        System.out.println("Elapsed time: " + (after - before));
+        TransferStrategy[] tss = new TransferStrategy[] {
+            new NonSyncStrategy(),
+            new SyncStrategy(),
+            new STMStrategy()
+        };
+
+        for (TransferStrategy ts : tss) {
+            Bank bank = new Bank();
+            System.out.println(ts.getClass().getSimpleName());
+            System.out.println("Bank sum before: " + bank.sum());
+            long before = System.currentTimeMillis();
+            bank.simulate(100, 10000, ts);
+            long after = System.currentTimeMillis();
+            System.out.println("Bank sum after: " + bank.sum());
+            System.out.println("Elapsed time: " + (after - before));
+        }
     }
 }

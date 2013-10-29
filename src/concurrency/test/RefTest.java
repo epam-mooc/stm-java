@@ -12,7 +12,9 @@ public class RefTest {
 
         Bank bank = new Bank();
 
-        bank.transferSTM(a, b, 10);
+        new STMStrategy().transfer(a, b, 10);
+        new STMStrategy().transfer(a, b, 10);
+        new STMStrategy().transfer(a, b, 10);
 
         System.out.println("A: " + a.getRef().getValue(GlobalContext.get()));
         System.out.println("B: " + b.getRef().getValue(GlobalContext.get()));

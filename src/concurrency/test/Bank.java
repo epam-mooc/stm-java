@@ -8,36 +8,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Bank {
-    private Account[] accounts;
+    Account[] accounts;
     private Random random = new Random();
+
+    long total = 0;
+    double charge = 0;
 
     public Bank() {
         randomFill();
-    }
-
-    synchronized void transfer(Account a1, Account a2, int amount) {
-        a1.add(-amount);
-        a2.add(amount);
-    }
-
-    void transferSTM(final Account a1, final Account a2, final int value) {
-        STM.transaction(new TransactionBlock() {
-            @Override
-            public void run() {
-                Transaction tx = this.getTx();
-                long old1 = a1.getRef().getValue(tx);
-                a1.getRef().setValue(old1 - value, tx);
-                long old2 = a2.getRef().getValue(tx);
-                a2.getRef().setValue(old2 + value, tx);
-            }
-        });
     }
 
     private void randomFill() {
         int NUM = 100;
         accounts = new Account[NUM];
         for (int i = 0; i < NUM; i++) {
-            accounts[i] = new Account(10000);
+            accounts[i] = new Account(100000);
         }
     }
 
@@ -46,7 +31,7 @@ public class Bank {
     }
 
     public int getRandomValue() {
-        return random.nextInt(10);
+        return random.nextInt(100);
     }
 
     public long sum() {
@@ -55,17 +40,11 @@ public class Bank {
         return sum;
     }
 
-    public long sumSTM() {
-        long sum = 0;
-        for (Account a : accounts) sum += a.getRef().getValue(GlobalContext.get());
-        return sum;
-    }
-
-    public void simulate(int threads, int num) throws Exception{
+    public void simulate(int threads, int num, TransferStrategy ts) throws Exception{
         ExecutorService service =
                 Executors.newFixedThreadPool(threads);
         for (int i = 0; i < threads; i++) {
-            service.submit(new BankThread(this, num));
+            service.submit(new BankThread(this, num, ts));
         }
         service.shutdown();
         service.awaitTermination(1, TimeUnit.MINUTES);

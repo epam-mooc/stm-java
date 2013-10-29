@@ -7,7 +7,7 @@ public final class Ref<T> {
     RefTuple<T, Long> content;
 
     public Ref(T value) {
-        content = RefTuple.get(value, 0);
+        content = RefTuple.get(value, 0L);
     }
 
     public T getValue(Context ctx) {
@@ -16,5 +16,20 @@ public final class Ref<T> {
 
     public void setValue(T value, Transaction tx) {
         tx.set(this, value);
+    }
+
+    /*
+       UNSAFE
+       ONLY FOR INSTRUMENTATION
+    */
+
+    @Deprecated
+    public T get() {
+        return content.value;
+    }
+
+    @Deprecated
+    public void set(T value) {
+        this.content.value = value;
     }
 }

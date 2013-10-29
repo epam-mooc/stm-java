@@ -3,20 +3,18 @@ package concurrency.test;
 import concurrency.stm.Ref;
 
 public class Account {
-    private long money;
     private Ref<Long> moneyRef;
 
     Account(long initialMoney) {
-        money = initialMoney;
-        moneyRef = new Ref<Long>(money);
+        moneyRef = new Ref<Long>(initialMoney);
     }
 
     public void add(long amount) {
-        money += amount;
+        moneyRef.set(moneyRef.get() + amount);
     }
 
     long getMoney() {
-        return money;
+        return moneyRef.get();
     }
 
     public Ref<Long> getRef() {
