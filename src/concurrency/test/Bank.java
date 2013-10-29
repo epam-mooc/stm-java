@@ -42,7 +42,7 @@ public class Bank {
 
     public void simulate(int threads, int num, TransferStrategy ts) throws Exception{
         ExecutorService service =
-                Executors.newFixedThreadPool(threads);
+                Executors.newFixedThreadPool(10);
         for (int i = 0; i < threads; i++) {
             service.submit(new BankThread(this, num, ts));
         }
