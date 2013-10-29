@@ -74,6 +74,6 @@ Hint: `STM.commitLock` can be improved, but not limited to.
 
 Implement any STM algorithm.
 
-</hr>
+___
 
 Inspired by [STM in Scala](http://www.codecommit.com/blog/scala/software-transactional-memory-in-scala)
